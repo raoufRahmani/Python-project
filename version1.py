@@ -12,7 +12,7 @@ import pandas as pd
 class Dataset:
     def __init__(self, X: np.ndarray, Y: np.ndarray, features_names: list):
         self.X = X
-        self.Y = Y
+        self.Y = Y 
         self.features_names = features_names
         self.n = X.shape[0]
         self.p = X.shape[1]
@@ -21,7 +21,7 @@ class Dataset:
         self.X = np.column_stack([np.ones((self.n, 1)), self.X])
         self.features_names.insert(0, "constante")
 
-    def to_dataframe(self):
+    def transform_to_dataframe(self):
         df = pd.DataFrame(self.X, columns=self.features_names)
         df["variable_expliquée"] = self.Y
         return df
@@ -39,9 +39,7 @@ def regression(X, Y, features_names):
     Xt_X = np.dot(X.T, X)
     Xt_Y = np.dot(X.T, Y)
     Beta = np.dot(np.linalg.inv(Xt_X), Xt_Y)
-    intercept = Beta[0]
-    betas = Beta[1:]
-    return regression_lineaire(coefficients=Beta, features_names=features_names), intercept, betas
+    return regression_lineaire(coefficients=Beta, features_names=features_names)
 
 
 # 3eme partie : résultats
@@ -62,10 +60,11 @@ class results:
 
     def metriques(self):
         ybar = np.mean(self.Y)
-        SCT = np.sum((self.Y - ybar)**2) / len(self.Y)
-        SCR = np.sum(self.erreurs**2) / len(self.Y)
+        SCT = np.sum((self.Y - ybar)**2) 
+        SCR = np.sum(self.erreurs**2) 
         self.R2 = (SCT - SCR) / SCT
         self.RMSE = np.sqrt(SCR)
+
 
     def extend_df(self):
         self.df["valeurs_prédites"] = self.valeurs_prédites
@@ -75,21 +74,20 @@ class results:
 
 def Fonction_regression():
 
-    # Génération des données
     T, V = datasets.make_regression(n_samples=1000, n_features=6, noise=10)
 
-    #p = 6
+
     feature_names = [f"X{i}" for i in range(T.shape[1])]
 
     data_1 = Dataset(X=T, Y=V, features_names=feature_names)
 
     data_1.add_intercept()       
-    df = data_1.to_dataframe()    
+    df = data_1.transform_to_dataframe()    
 
     print(df)
 
     # Régression
-    res_regression, intercept, betas = regression(data_1.X, data_1.Y, data_1.features_names)
+    res_regression = regression(data_1.X, data_1.Y, data_1.features_names)
     Beta = res_regression.coefficients
 
     print("dataclass contenant les coefficients :", res_regression)
@@ -111,5 +109,5 @@ def Fonction_regression():
     print("RMSE :", res.RMSE)
 
 
-if __name__ == "__main__":
-    Fonction_regression()
+
+Fonction_regression()
