@@ -63,7 +63,8 @@ class results:
         SCT = np.sum((self.Y - ybar)**2) 
         SCR = np.sum(self.erreurs**2) 
         self.R2 = (SCT - SCR) / SCT
-        self.RMSE = np.sqrt(SCR)
+        self.RMSE = np.sqrt(SCR / len(self.Y))
+
 
 
     def extend_df(self):
@@ -74,7 +75,7 @@ class results:
 
 def Fonction_regression():
 
-    T, V = datasets.make_regression(n_samples=1000, n_features=6, noise=10)
+    T, V = datasets.make_regression(n_samples=1000, n_features=6, noise=100)
 
 
     feature_names = [f"X{i}" for i in range(T.shape[1])]
